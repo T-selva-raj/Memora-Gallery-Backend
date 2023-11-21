@@ -6,3 +6,7 @@ CONFIG.db_port = process.env.DB_PORT;
 CONFIG.db_name = process.env.DB_NAME;
 CONFIG.db_user = process.env.DB_USER;
 CONFIG.db_password = process.env.DB_PASSWORD;
+
+CONFIG.encryption_key = "Selva@2428";
+CONFIG.Jwt_encryption = "selva@2002";
+CONFIG.Jwt_expiry = 500000;
