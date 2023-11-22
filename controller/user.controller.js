@@ -1,12 +1,13 @@
 const { SendResponse } = require("../generalFunctions");
-
+const UserService = require('../service/user.service');
 
 const signUpUser = async (req, res) => {
     try {
-        SendResponse(res,{ name: " selva" }, "vanakkam da mapla", 422);
+        let user = await UserService.signUpUser(req?.body);
+        if(user) return SendResponse(res,user,"Registered successfully !", 200);
     }
     catch (e) {
-        res.json({ success: false });
+       return SendResponse(res,null,e.message,422)
     }
 }
 module.exports.signUpUser = signUpUser;

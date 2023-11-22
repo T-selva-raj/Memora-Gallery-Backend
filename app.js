@@ -3,8 +3,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var passport = require('passport');
+var cryptoService = require('./service/crypto.js');
 require('./config/config.js');
-var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var app = express();
 require('./models');
@@ -12,15 +13,26 @@ require('./generalFunctions.js');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
+app.use(passport.initialize());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-app.use('/', indexRouter);
+app.use(async function (req, res, next) {
+  if (req && req.headers && req.headers.authorization) {
+    try {
+      let data = await cryptoService.decrypt(req?.headers?.authorization);
+      if (data) req.headers.authorization = data;
+    } catch (e){ throw new Error(e.message);}
+  }
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Controll-Allow-Methods', 'GET,POST,PUT,PATCH,OPTIONS,DELETE');
+  res.setHeader('Access-Controll-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 app.use('/users', usersRouter);
 
 

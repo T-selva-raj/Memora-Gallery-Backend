@@ -4,7 +4,6 @@ var path = require('path');
 const Sequelize = require('sequelize');
 var baseFileName = path.basename(__filename);
 const dataBase = {};
-console.log("config...",CONFIG);
 const sequelize = new Sequelize(CONFIG.db_name, CONFIG.db_user, CONFIG.db_password, {
     dialect: 'mysql',
     host: CONFIG.db_host,
