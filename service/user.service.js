@@ -3,18 +3,24 @@ const bcrypt = require('bcrypt');
 const UserDetails = require('../models').userDetails;
 
 
-
+/**
+ * function is used to sign up the user
+ * @param {*} userData 
+ * @returns 
+ */
 const signUpUser = async (userData) => {
     try {
         let user = await UserDetails.findOrCreate({
-            userName: userData?.userName,
-            email: userData?.email,
-            password: userData?.password
+            where: { email: userData.email }, 
+            defaults: {
+                userName: userData.userName,
+                password: userData.password,
+            }
         });
-        if (user) {
-            let folder = await createUserFolder(user?.dataValues?.userName);
+        if (user&&user[1]) {
+            let folder = await createUserFolder(user[0]?.dataValues?.userName,user[0]?.dataValues?.email);
             await UserDetails.update({ driveFolder: folder }, {
-                where: { id: user?.dataValues?.id }
+                where: { id: user[0]?.dataValues?.id }
             });
         }
         return user;
@@ -24,6 +30,11 @@ const signUpUser = async (userData) => {
 }
 module.exports.signUpUser = signUpUser;
 
+/**
+ * function is used to sign in
+ * @param {*} userData 
+ * @returns 
+ */
 const signInUser = async (userData) => {
     try {
         let user = await UserDetails.findOne({
@@ -49,6 +60,11 @@ const signInUser = async (userData) => {
 }
 module.exports.signInUser = signInUser;
 
+/**
+ * the function is used to get the user profile data
+ * @param {*} userId 
+ * @returns 
+ */
 const getUserProfile = async (userId) => {
     try {
         let userDetails = await UserDetails.findOne({
@@ -65,6 +81,12 @@ const getUserProfile = async (userId) => {
 }
 module.exports.getUserProfile = getUserProfile;
 
+/**
+ * function is used to update the profile
+ * @param {*} data 
+ * @param {*} userId 
+ * @returns 
+ */
 const updateProfile = async (data,userId) => {
     try {
         let updateProfile = await UserDetails.update(data, {
@@ -76,8 +98,13 @@ const updateProfile = async (data,userId) => {
 }
 module.exports.updateProfile = updateProfile;
 
-
-const createUserFolder = async (userId) => {
+/**
+ * function is used to create the folder in the cloud
+ * @param {*} userId 
+ * @param {*} email 
+ * @returns 
+ */
+const createUserFolder = async (userId,email) => {
     try {
         const DRIVE = await drive();
         const userFolderName = `user_${userId}_${Date.now()}`;
@@ -90,6 +117,7 @@ const createUserFolder = async (userId) => {
             resource: folderMetadata,
             fields: 'id',
         });
+        await shareFolder(folder?.data?.id, email);
         console.log('User folder created successfully. Folder ID:', folder.data.id);
         return { folderId: folder.data.id, folderName: userFolderName };
     } catch (error) {
@@ -97,8 +125,31 @@ const createUserFolder = async (userId) => {
         throw error;
     }
 };
+/**
+ * function is used to grand access to the user.
+ * @param {*} folderId 
+ * @param {*} userEmail 
+ */
+const shareFolder = async (folderId, userEmail) => {
+    const DRIVE = await drive();
+    const permission = {
+        type: 'user',
+        role: 'writer', 
+        emailAddress: userEmail,
+    };
+    DRIVE.permissions.create({
+        fileId: folderId,
+        resource: permission,
+    });
 
+    console.log(`Folder ${folderId} shared with ${userEmail}`);
+};
 
+/**
+ * function is used to check the duplicate entries 
+ * @param {*} data 
+ * @returns 
+ */
 const checkDuplicate = async (data) => {
     try {
         console.log(data);

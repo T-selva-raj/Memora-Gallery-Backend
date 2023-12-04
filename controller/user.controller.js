@@ -44,14 +44,12 @@ const updateProfile = async (req, res) => {
 
 const updateProfileImage = async (req, res) => {
     try {
-        let uploadImage;
-        for await (let image of req.files) {
-            uploadImage = await UploadService.uploadFile(image, req.query.parantId);
-        }
+        console.log("controlelr....",req.files);
+        let uploadImage = await UploadService.uploadFile(req.file, req.query.parantId);
         let data = await UserService.updateProfile({
             profilePicture: uploadImage?.data?.id
         },req.params.id);
-        if (uploadImage && data) return SendResponse(res, imageArray, MESSAGE.UPDATE_USER_PROFILE_SUCCESS, 200);
+        if (uploadImage && data) return SendResponse(res, data, MESSAGE.UPDATE_USER_PROFILE_SUCCESS, 200);
         else throw new Error('Error While Updating !');
 
     } catch (e) { return SendResponse(res, null, { detail: MESSAGE.UPDATE_USER_PROFILE_FAILED, reason: e.message }, 422) }
