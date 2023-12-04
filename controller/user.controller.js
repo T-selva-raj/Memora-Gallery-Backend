@@ -41,6 +41,21 @@ const updateProfile = async (req, res) => {
         
     }catch(e){return SendResponse(res,null,{detail:MESSAGE.UPDATE_USER_PROFILE_FAILED,reason:e.message},422)}
 }
+
+const updateProfileImage = async (req, res) => {
+    try {
+        let uploadImage;
+        for await (let image of req.files) {
+            uploadImage = await UploadService.uploadFile(image, req.query.parantId);
+        }
+        let data = await UserService.updateProfile({
+            profilePicture: uploadImage?.data?.id
+        },req.params.id);
+        if (uploadImage && data) return SendResponse(res, imageArray, MESSAGE.UPDATE_USER_PROFILE_SUCCESS, 200);
+        else throw new Error('Error While Updating !');
+
+    } catch (e) { return SendResponse(res, null, { detail: MESSAGE.UPDATE_USER_PROFILE_FAILED, reason: e.message }, 422) }
+}
 const uploadImage = async (req, res) => {
     try {
         let uploadImage,imageArray=[];
@@ -52,11 +67,22 @@ const uploadImage = async (req, res) => {
         }
         // let uploadImage = await UploadService.uploadFile(req?.file,req.query.parantId);
         let data = await ImageService.createUserImage(imageArray,req.params.id);
-        if (imageArray.length&&data) return SendResponse(res, imageArray, MESSAGE.UPDATE_USER_PROFILE_SUCCESS, 200);
+        if (imageArray.length && data) return SendResponse(res, imageArray, MESSAGE.IMAGES_UPLOAD_SUCCESS, 200);
         else throw new Error('Error While Updating !');
 
-    } catch (e) { return SendResponse(res, null, { detail: MESSAGE.UPDATE_USER_PROFILE_FAILED, reason: e.message }, 422) }
+    } catch (e) { return SendResponse(res, null, { detail: MESSAGE.IMAGES_UPLOAD_FAILED, reason: e.message }, 422) }
 }
+
+const checkDuplicate = async (req, res) => {
+    try {
+        let info = await UserService.checkDuplicate(req.body);
+        return SendResponse(res, info, MESSAGE.CHECK_DUPLICATE_SUCCESS, 200);
+        
+    } catch (e) { return SendResponse(res, null, { detail: MESSAGE.CHECK_DUPLICATE_FAILED, reason: e.message }, 422) }
+}
+
+
 module.exports = {
-    updateProfile, getUserProfile, signInUser, signUpUser, uploadImage
+    updateProfile, getUserProfile, signInUser, signUpUser, uploadImage, updateProfileImage,
+    checkDuplicate
 }

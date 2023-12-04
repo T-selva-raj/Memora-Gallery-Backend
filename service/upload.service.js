@@ -3,7 +3,6 @@ const { getDrive } = require('./drive.service.js');
 const { Readable } = require('stream');
 
 const uploadFile = async (fileData, parentId) => {
-    
     const drive = await getDrive();
     return new Promise((resolve, reject) => {
         var fileMetaData = {

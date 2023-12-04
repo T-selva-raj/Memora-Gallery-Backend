@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
         paranoid: true
     });
     Model.associate = function (models) {
-        this.belongsTo(models.userDetails, { foreignKey: 'userID'});
+        this.belongsTo(models.userDetails, { foreignKey: 'userID' });
+        this.belongsTo(models.albums, { foreignKey: 'albumId' })
     }
     return Model;
 }

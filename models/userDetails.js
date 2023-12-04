@@ -70,7 +70,8 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     Model.associate = function (models) {
-        this.hasMany(models.Images, { foreignKey: 'userID'});
+        this.hasMany(models.Images, { foreignKey: 'userID' });
+        this.hasMany(models.albums, { foreignKey: 'albumId' });
     }
     return Model;
 }

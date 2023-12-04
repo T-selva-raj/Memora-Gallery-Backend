@@ -6,7 +6,7 @@ const UserDetails = require('../models').userDetails;
 
 const signUpUser = async (userData) => {
     try {
-        let user = await UserDetails.create({
+        let user = await UserDetails.findOrCreate({
             userName: userData?.userName,
             email: userData?.email,
             password: userData?.password
@@ -97,3 +97,16 @@ const createUserFolder = async (userId) => {
         throw error;
     }
 };
+
+
+const checkDuplicate = async (data) => {
+    try {
+        console.log(data);
+        let info = await UserDetails.findAll({
+            where: data
+        });
+        if (info.length) return false;
+        else return true;
+    }catch(error){throw error}
+}
+module.exports.checkDuplicate = checkDuplicate;
