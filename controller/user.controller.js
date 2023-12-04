@@ -56,6 +56,9 @@ const updateProfileImage = async (req, res) => {
 
     } catch (e) { return SendResponse(res, null, { detail: MESSAGE.UPDATE_USER_PROFILE_FAILED, reason: e.message }, 422) }
 }
+
+
+
 const uploadImage = async (req, res) => {
     try {
         let uploadImage,imageArray=[];
