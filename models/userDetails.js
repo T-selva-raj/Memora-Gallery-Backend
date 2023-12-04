@@ -29,11 +29,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.JSON
         },
         bio: {
-            type: DataTypes.STRING
+            type: DataTypes.JSON
         },
         profilePicture: {
             type: DataTypes.STRING
         },
+        driveFolder: {
+            type: DataTypes.JSON
+        }
     }, {
         tableName: 'userDetails',
         timestamps: true,
@@ -57,13 +60,17 @@ module.exports = (sequelize, DataTypes) => {
             let token = 'Bearer ' + jwt.sign({
                 id: this.id,
                 userName: this.userName,
-                email: this.email
+                email: this.email,
+                driveFolder: this.driveFolder
             }, CONFIG.Jwt_encryption, { expiresIn: CONFIG.Jwt_expiry });
             let encryptedToken = cryptoService.encrypt(token);
             return encryptedToken;
         } catch (e) {
             throw new Error(e.message);
         }
+    }
+    Model.associate = function (models) {
+        this.hasMany(models.Images, { foreignKey: 'userID'});
     }
     return Model;
 }

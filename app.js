@@ -9,12 +9,14 @@ var cryptoService = require('./service/crypto.js');
 var cors = require('cors');
 var usersRouter = require('./routes/users');
 var app = express();
-
 require('./models');
 require('./generalFunctions.js');
+var Drive=require('./service/drive.service.js');
 
 
-// view engine setup
+
+Drive.authorize().then(() => console.log("Drive Connected..!"));
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(passport.initialize());
