@@ -14,7 +14,7 @@ router.post('/signin', userController.signInUser);
 router.get('/profile', passport.authenticate('jwt', { session: false }), userController.getUserProfile);
 router.put('/profile/:id', passport.authenticate('jwt', { session: false }), userController.updateProfile);
 router.post('/checkduplicate', userController.checkDuplicate);
-// router.put('/profilepicture/:id')
+router.put('/profilepicture/:id',upload.single('file'), userController.updateProfileImage);
 router.get('/ping', passport.authenticate('jwt', { session: false }), function (req, res) {
   if (req.user) {
     res.send(req.user);
