@@ -9,13 +9,12 @@ var cryptoService = require('./service/crypto.js');
 var cors = require('cors');
 var usersRouter = require('./routes/users');
 var app = express();
+
+require('./service/firebase.service.js');
 require('./models');
 require('./generalFunctions.js');
-var Drive=require('./service/drive.service.js');
-
-
-
-Drive.authorize().then(() => console.log("Drive Connected..!"));
+// var Drive=require('./service/drive.service.js');
+// Drive.authorize().then(() => console.log("Drive Connected..!"));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -40,8 +39,9 @@ app.use(async function (req, res, next) {
   next();
 });
 app.use('/users', usersRouter);
-
-
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
+app.post('/v1', upload.single('file'), require('./controller/firebase.controller.js').uploadFileTOfireBase);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

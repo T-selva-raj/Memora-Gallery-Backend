@@ -44,7 +44,6 @@ const updateProfile = async (req, res) => {
 
 const updateProfileImage = async (req, res) => {
     try {
-        console.log("controlelr....",req.files);
         let uploadImage = await UploadService.uploadFile(req.file, req.query.parantId);
         let data = await UserService.updateProfile({
             profilePicture: uploadImage?.data?.id
@@ -76,6 +75,7 @@ const uploadImage = async (req, res) => {
 
 const checkDuplicate = async (req, res) => {
     try {
+        console.log(req.body);
         let info = await UserService.checkDuplicate(req.body);
         return SendResponse(res, info, MESSAGE.CHECK_DUPLICATE_SUCCESS, 200);
         
