@@ -1,4 +1,4 @@
-const drive = require('./drive.service').getDrive;
+// const drive = require('./drive.service').getDrive;
 const bcrypt = require('bcrypt');
 const UserDetails = require('../models').userDetails;
 
@@ -16,12 +16,12 @@ const signUpUser = async (userData) => {
                 password: userData.password,
             }
         });
-        if (user&&user[1]) {
-            let folder = await createUserFolder(user[0]?.dataValues?.userName,user[0]?.dataValues?.email);
-            await UserDetails.update({ driveFolder: folder }, {
-                where: { id: user[0]?.dataValues?.id }
-            });
-        }
+        // if (user&&user[1]) {
+        //     let folder = await createUserFolder(user[0]?.dataValues?.userName,user[0]?.dataValues?.email);
+        //     await UserDetails.update({ driveFolder: folder }, {
+        //         where: { id: user[0]?.dataValues?.id }
+        //     });
+        // }
         return user;
     } catch (e) {
         throw new Error(e.message);
@@ -103,47 +103,47 @@ module.exports.updateProfile = updateProfile;
  * @param {*} userId 
  * @param {*} email 
  * @returns 
- */
-const createUserFolder = async (userId,email) => {
-    try {
-        const DRIVE = await drive();
-        const userFolderName = `user_${userId}_${Date.now()}`;
-        const folderMetadata = {
-            name: userFolderName,
-            mimeType: 'application/vnd.google-apps.folder',
-            parents: [CONFIG.folder],
-        };
-        const folder = await DRIVE.files.create({
-            resource: folderMetadata,
-            fields: 'id',
-        });
-        await shareFolder(folder?.data?.id, email);
-        console.log('User folder created successfully. Folder ID:', folder.data.id);
-        return { folderId: folder.data.id, folderName: userFolderName };
-    } catch (error) {
-        console.error('Error creating user folder:', error);
-        throw error;
-    }
-};
+//  */
+// const createUserFolder = async (userId,email) => {
+//     try {
+//         const DRIVE = await drive();
+//         const userFolderName = `user_${userId}_${Date.now()}`;
+//         const folderMetadata = {
+//             name: userFolderName,
+//             mimeType: 'application/vnd.google-apps.folder',
+//             parents: [CONFIG.folder],
+//         };
+//         const folder = await DRIVE.files.create({
+//             resource: folderMetadata,
+//             fields: 'id',
+//         });
+//         await shareFolder(folder?.data?.id, email);
+//         console.log('User folder created successfully. Folder ID:', folder.data.id);
+//         return { folderId: folder.data.id, folderName: userFolderName };
+//     } catch (error) {
+//         console.error('Error creating user folder:', error);
+//         throw error;
+//     }
+// };
 /**
  * function is used to grand access to the user.
  * @param {*} folderId 
  * @param {*} userEmail 
  */
-const shareFolder = async (folderId, userEmail) => {
-    const DRIVE = await drive();
-    const permission = {
-        type: 'user',
-        role: 'writer', 
-        emailAddress: userEmail,
-    };
-    DRIVE.permissions.create({
-        fileId: folderId,
-        resource: permission,
-    });
+// const shareFolder = async (folderId, userEmail) => {
+//     const DRIVE = await drive();
+//     const permission = {
+//         type: 'user',
+//         role: 'writer', 
+//         emailAddress: userEmail,
+//     };
+//     DRIVE.permissions.create({
+//         fileId: folderId,
+//         resource: permission,
+//     });
 
-    console.log(`Folder ${folderId} shared with ${userEmail}`);
-};
+//     console.log(`Folder ${folderId} shared with ${userEmail}`);
+// };
 
 /**
  * function is used to check the duplicate entries 
