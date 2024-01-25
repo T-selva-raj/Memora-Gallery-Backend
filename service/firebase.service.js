@@ -14,7 +14,7 @@ const bucket = admin.storage().bucket();
 const uploadImageToFireBase = async (files,data) => {
     try {
         let success = 0, err = [];
-        const folderName = data?.userName ? data.userName : "default";
+        const folderName = data?.folderName ? data.folderName : "default";
         for (let file of files) {
             const filename = Date.now() + file.originalname;
             const fileUpload = bucket.file(`${folderName}/` + filename);

@@ -17,12 +17,12 @@ const signUpUser = async (userData) => {
                 password: userData.password,
             }
         });
-        if (user&&user[1]) {
-            let folder = await createUserFolder(user[0]?.dataValues?.userName,user[0]?.dataValues?.email);
-            await UserDetails.update({ driveFolder: folder }, {
-                where: { id: user[0]?.dataValues?.id }
-            });
-        }
+        // if (user&&user[1]) {
+        //     let folder = await createUserFolder(user[0]?.dataValues?.userName,user[0]?.dataValues?.email);
+        //     await UserDetails.update({ driveFolder: folder }, {
+        //         where: { id: user[0]?.dataValues?.id }
+        //     });
+        // }
         return user;
     } catch (e) {
         throw new Error(e.message);
