@@ -8,10 +8,10 @@ require('../config/message').MESSAGE;
 const signUpUser = async (req, res) => {
     try {
         let user = await UserService.signUpUser(req?.body);
-        if(user) return SendResponse(res,user,MESSAGE.SIGNUP_SUCCESS, 200);
+        if(user) return SendResponse(res,user, 200);
     }
     catch (e) {
-        return SendResponse(res, null, { detail: MESSAGE.SIGNUP_FAILED, reason: e.message }, 422);
+        return SendResponse(res, e, 422);
     }
 }
 
@@ -19,27 +19,27 @@ const signUpUser = async (req, res) => {
 const signInUser = async (req, res) => {
     try {
         let user = await UserService.signInUser(req?.body);
-        if (user) return SendResponse(res, user, MESSAGE.SIGNIN_SUCCESS, 200);
-    } catch (e) { return SendResponse(res, null, { detail:MESSAGE.SIGNIN_FAILED,reason:e.message}, 422) };
+        if (user) return SendResponse(res, user, 200);
+    } catch (e) { return SendResponse(res, e, 422) };
 }
 
 
 const getUserProfile = async (req, res) => {
     try {
         let userProfile = await UserService.getUserProfile(req?.user?.id);
-        if (userProfile) return SendResponse(res, userProfile, MESSAGE.GET_USER_PROFILE_SUCCESS, 200);
+        if (userProfile) return SendResponse(res, userProfile, 200);
         else throw new Error('user not found !');
-    }catch(e){return SendResponse(res,null,{detail:MESSAGE.GET_USER_PROFILE_FAILED,reason:e.message},422)}
+    }catch(e){return SendResponse(res,e,422)}
 }
 
 
 const updateProfile = async (req, res) => {
     try {
         let updateProfile = await UserService.updateProfile(req?.body, req?.params?.id);
-        if (updateProfile) return SendResponse(res, updateProfile, MESSAGE.UPDATE_USER_PROFILE_SUCCESS, 200);
+        if (updateProfile) return SendResponse(res, updateProfile, 200);
         else throw new Error('Error While Updating !');
         
-    }catch(e){return SendResponse(res,null,{detail:MESSAGE.UPDATE_USER_PROFILE_FAILED,reason:e.message},422)}
+    }catch(e){return SendResponse(res,e,422)}
 }
 
 const updateProfileImage = async (req, res) => {
@@ -49,10 +49,10 @@ const updateProfileImage = async (req, res) => {
         let data = await UserService.updateProfile({
             profilePicture: uploadImage?.data?.id
         },req.params.id);
-        if (uploadImage && data) return SendResponse(res, data, MESSAGE.UPDATE_USER_PROFILE_SUCCESS, 200);
+        if (uploadImage && data) return SendResponse(res, data, 200);
         else throw new Error('Error While Updating !');
 
-    } catch (e) { return SendResponse(res, null, { detail: MESSAGE.UPDATE_USER_PROFILE_FAILED, reason: e.message }, 422) }
+    } catch (e) { return SendResponse(res,e, 422) }
 }
 
 
@@ -68,18 +68,18 @@ const uploadImage = async (req, res) => {
         }
         // let uploadImage = await UploadService.uploadFile(req?.file,req.query.parantId);
         let data = await ImageService.createUserImage(imageArray,req.params.id);
-        if (imageArray.length && data) return SendResponse(res, imageArray, MESSAGE.IMAGES_UPLOAD_SUCCESS, 200);
+        if (imageArray.length && data) return SendResponse(res, imageArray, 200);
         else throw new Error('Error While Updating !');
 
-    } catch (e) { return SendResponse(res, null, { detail: MESSAGE.IMAGES_UPLOAD_FAILED, reason: e.message }, 422) }
+    } catch (e) { return SendResponse(res, e , 422) }
 }
 
 const checkDuplicate = async (req, res) => {
     try {
         let info = await UserService.checkDuplicate(req.body);
-        return SendResponse(res, info, MESSAGE.CHECK_DUPLICATE_SUCCESS, 200);
+        return SendResponse(res, info, 200);
         
-    } catch (e) { return SendResponse(res, null, { detail: MESSAGE.CHECK_DUPLICATE_FAILED, reason: e.message }, 422) }
+    } catch (e) { return SendResponse(res,e, 422) }
 }
 
 

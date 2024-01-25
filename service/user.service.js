@@ -2,7 +2,6 @@ const drive = require('./drive.service').getDrive;
 const bcrypt = require('bcrypt');
 const UserDetails = require('../models').userDetails;
 
-
 /**
  * function is used to sign up the user
  * @param {*} userData 
@@ -39,7 +38,8 @@ const signInUser = async (userData) => {
     try {
         let user = await UserDetails.findOne({
             where: {
-                email: userData?.email
+                email: userData?.email,
+                isDeleted:false
             }
         });
         if (user) {
