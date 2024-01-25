@@ -61,6 +61,7 @@ let sequelize = new Sequelize(
         dialect: CONFIG.db_dialect,
         port: CONFIG.db_port,
         logging: false,
+        ssl: true,
         define: {
             timestamps: false,
             underscored: true,
@@ -72,6 +73,9 @@ let sequelize = new Sequelize(
         },
         dialectOptions: {
             useUTC: true,
+            ssl: {
+                require: true, // Require SSL
+            },
         },
     }
 );
