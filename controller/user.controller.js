@@ -42,37 +42,36 @@ const updateProfile = async (req, res) => {
     }catch(e){return SendResponse(res,e,422)}
 }
 
-const updateProfileImage = async (req, res) => {
-    try {
-        console.log("controlelr....",req.files);
-        let uploadImage = await UploadService.uploadFile(req.file, req.query.parantId);
-        let data = await UserService.updateProfile({
-            profilePicture: uploadImage?.data?.id
-        },req.params.id);
-        if (uploadImage && data) return SendResponse(res, data, 200);
-        else throw new Error('Error While Updating !');
+// const updateProfileImage = async (req, res) => {
+//     try {
+//         let uploadImage = await UploadService.uploadFile(req.file, req.query.parantId);
+//         let data = await UserService.updateProfile({
+//             profilePicture: uploadImage?.data?.id
+//         },req.params.id);
+//         if (uploadImage && data) return SendResponse(res, data, 200);
+//         else throw new Error('Error While Updating !');
 
-    } catch (e) { return SendResponse(res,e, 422) }
-}
-
+//     } catch (e) { return SendResponse(res,e, 422) }
+// }
 
 
-const uploadImage = async (req, res) => {
-    try {
-        let uploadImage,imageArray=[];
-        req.query.parantId = "1B48HbXVUHDaLhuiBRXjAm3mtxaFRWi1B";
-        req.params.id = 9;
-        for await (let image of req.files) {
-            uploadImage = await UploadService.uploadFile(image, req.query.parantId);
-            imageArray.push({id:uploadImage?.data?.id,albumId:null});
-        }
-        // let uploadImage = await UploadService.uploadFile(req?.file,req.query.parantId);
-        let data = await ImageService.createUserImage(imageArray,req.params.id);
-        if (imageArray.length && data) return SendResponse(res, imageArray, 200);
-        else throw new Error('Error While Updating !');
 
-    } catch (e) { return SendResponse(res, e , 422) }
-}
+// const uploadImage = async (req, res) => {
+//     try {
+//         let uploadImage,imageArray=[];
+//         req.query.parantId = "1B48HbXVUHDaLhuiBRXjAm3mtxaFRWi1B";
+//         req.params.id = 9;
+//         for await (let image of req.files) {
+//             uploadImage = await UploadService.uploadFile(image, req.query.parantId);
+//             imageArray.push({id:uploadImage?.data?.id,albumId:null});
+//         }
+//         // let uploadImage = await UploadService.uploadFile(req?.file,req.query.parantId);
+//         let data = await ImageService.createUserImage(imageArray,req.params.id);
+//         if (imageArray.length && data) return SendResponse(res, imageArray, 200);
+//         else throw new Error('Error While Updating !');
+
+//     } catch (e) { return SendResponse(res, e , 422) }
+// }
 
 const checkDuplicate = async (req, res) => {
     try {
@@ -84,6 +83,6 @@ const checkDuplicate = async (req, res) => {
 
 
 module.exports = {
-    updateProfile, getUserProfile, signInUser, signUpUser, uploadImage, updateProfileImage,
+    updateProfile, getUserProfile, signInUser, signUpUser,
     checkDuplicate
 }

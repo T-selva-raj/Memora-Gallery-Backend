@@ -10,6 +10,7 @@ var cors = require('cors');
 var usersRouter = require('./routes/users');
 var app = express();
 require('./models');
+require('./service/firebase.service.js');
 require('./generalFunctions.js');
 // var Drive=require('./service/drive.service.js');
 
