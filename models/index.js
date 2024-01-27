@@ -73,9 +73,9 @@ let sequelize = new Sequelize(
         },
         dialectOptions: {
             useUTC: true,
-            // ssl: {
-            //     require: true, // Require SSL
-            // },
+            ssl: {
+                require: true, // Require SSL
+            },
         },
     }
 );
